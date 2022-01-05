@@ -244,16 +244,18 @@ class Web3Provider(NodeDataProvider):
         return open(os.path.join(os.path.dirname(__file__), "static/tracer.js")).read()
 
     @lru_cache(maxsize=512)
-    def get_calls(self, tx_hash: str, chain_id: Optional[str] = None) -> W3CallTree:
-        # tracer is a temporary fixed implementation of geth tracer
-        chain = self._get_node_connection(chain_id)
-        tracer = self._get_custom_calls_tracer()
-        response = chain.manager.request_blocking(
-            "debug_traceTransaction", [tx_hash, {"tracer": tracer, "timeout": "60s"}]
-        )
-
+    def get_calls(self, tx_hash: str, chain_id: Optional[str] = None, trace: Optional[dict] = None) -> W3CallTree:
+        if trace is None:
+            # tracer is a temporary fixed implementation of geth tracer
+            chain = self._get_node_connection(chain_id)
+            tracer = self._get_custom_calls_tracer()
+            response = chain.manager.request_blocking(
+                "debug_traceTransaction", [tx_hash, {"tracer": tracer, "timeout": "60s"}]
+            )
+            trace = response
+        
         return self._create_call_from_debug_trace_tx(
-            tx_hash, chain_id or self.default_chain, response
+            tx_hash, chain_id or self.default_chain, trace
         )
 
     # get the contract bytecode hash from the node
