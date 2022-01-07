@@ -243,8 +243,7 @@ class Web3Provider(NodeDataProvider):
     def _get_custom_calls_tracer():
         return open(os.path.join(os.path.dirname(__file__), "static/tracer.js")).read()
 
-    @lru_cache(maxsize=512)
-    def get_calls(self, tx_hash: str, chain_id: Optional[str] = None, trace: Optional[dict] = None) -> W3CallTree:
+    def get_calls(self, tx_hash: str, chain_id: Optional[str] = None, trace: Optional[AttributeDict] = None) -> W3CallTree:
         if trace is None:
             # tracer is a temporary fixed implementation of geth tracer
             chain = self._get_node_connection(chain_id)
@@ -252,6 +251,7 @@ class Web3Provider(NodeDataProvider):
             response = chain.manager.request_blocking(
                 "debug_traceTransaction", [tx_hash, {"tracer": tracer, "timeout": "60s"}]
             )
+
             trace = response
         
         return self._create_call_from_debug_trace_tx(

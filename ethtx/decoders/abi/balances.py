@@ -39,7 +39,7 @@ class ABIBalancesDecoder(ABISubmoduleAbc):
                 transfer.token_standard,
                 transfer.token_symbol,
             )
-
+            
         balance_sheet: dict = {address: defaultdict(int) for address in balance_holders}
 
         for transfer in transfers:
@@ -51,6 +51,7 @@ class ABIBalancesDecoder(ABISubmoduleAbc):
                 balance_sheet[transfer.to_address.address][
                     transfer.token_address
                 ] += transfer.value
+
 
         balances = []
         for holder_address in balance_holders:
@@ -66,6 +67,7 @@ class ABIBalancesDecoder(ABISubmoduleAbc):
                             balance=balance_sheet[holder_address][token_address],
                         )
                     )
+
             if tokens:
                 holder_name = balance_holders[holder_address]
                 balances.append(

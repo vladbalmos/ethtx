@@ -178,7 +178,7 @@ class SemanticsRepository:
 
         return None
 
-    @lru_cache(maxsize=128)
+    #@lru_cache(maxsize=128)
     def get_semantics(self, chain_id: str, address: str) -> Optional[AddressSemantics]:
 
         if not address:
@@ -198,6 +198,7 @@ class SemanticsRepository:
                 raw_semantics, decoded = self.etherscan.contract.get_contract_abi(
                     chain_id, address
                 )
+                
                 if decoded and raw_semantics:
                     # raw semantics received from Etherscan
                     events, functions = decode_events_and_functions(

@@ -58,7 +58,7 @@ class ABIEventsDecoder(ABISubmoduleAbc):
             event_signature = event.topics[0]
         else:
             event_signature = None
-
+            
         anonymous, guessed = False, False
         chain_id = chain_id or self._default_chain
 
