@@ -41,17 +41,26 @@ class ABIBalancesDecoder(ABISubmoduleAbc):
             )
             
         balance_sheet: dict = {address: defaultdict(int) for address in balance_holders}
+        print(balance_sheet)
+        print('-------------')
 
         for transfer in transfers:
             if transfer.from_address.address != ZERO_ADDRESS:
                 balance_sheet[transfer.from_address.address][
                     transfer.token_address
                 ] -= transfer.value
+                print('from')
+                print(transfer.from_address.address)
+                print(balance_sheet[transfer.from_address.address][transfer.token_address])
+                print('--------------------------')
             if transfer.to_address.address != ZERO_ADDRESS:
                 balance_sheet[transfer.to_address.address][
                     transfer.token_address
                 ] += transfer.value
-
+                print('to')
+                print(transfer.to_address.address)
+                print(balance_sheet[transfer.to_address.address][transfer.token_address])
+                print('--------------------------')
 
         balances = []
         for holder_address in balance_holders:
@@ -76,5 +85,6 @@ class ABIBalancesDecoder(ABISubmoduleAbc):
                         tokens=tokens,
                     )
                 )
+
 
         return balances

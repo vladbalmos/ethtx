@@ -72,7 +72,6 @@ def decode_event_parameters(data, topics, abi, anonymous):
                 data_parameters[i] = Argument(**parameter)
 
     else:
-
         for i, parameter in enumerate(amended_topics[1:]):
             if not amended_topics[i + 1]:
                 break

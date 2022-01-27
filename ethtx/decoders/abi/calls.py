@@ -87,13 +87,13 @@ class ABICallsDecoder(ABISubmoduleAbc):
             function_signature = call.call_data[:10]
         else:
             function_signature = None
-
+            
         from_name = self._repository.get_address_label(
             chain_id, call.from_address, proxies
         )
 
         to_name = self._repository.get_address_label(chain_id, call.to_address, proxies)
-
+        
         if call.call_type == "selfdestruct":
             function_name = call.call_type
             function_input, function_output = [], []
@@ -114,7 +114,7 @@ class ABICallsDecoder(ABISubmoduleAbc):
             )
 
             function_signature = call.call_data[:10] if call.call_data else ""
-
+            
             if not function_abi and call.to_address in proxies:
                 # try to find signature in delegate-called contracts
                 for semantic in proxies[call.to_address].semantics:
@@ -151,6 +151,7 @@ class ABICallsDecoder(ABISubmoduleAbc):
                         function_input, function_output = decode_function_parameters(
                             call.call_data, call.return_value, function_abi, call.status
                         )
+                        break
                     except Exception as e:
                         log.info(
                             "Skipping getting function from external source and trying to get next. Error: %s",
